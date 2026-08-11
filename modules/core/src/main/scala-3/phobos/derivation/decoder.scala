@@ -115,10 +115,8 @@ object decoder {
                 )
               ${ currentFieldStates }.update(${ Expr(element.localName) }, res)
               if (res.isCompleted) {
-                res.result(${ element.xmlName } :: $c.history) match {
-                  case Right(_)    => $go(DecoderState.DecodingSelf)
-                  case Left(error) => new ElementDecoder.FailedDecoder[T](error)
-                }
+                // Skip .result() when sub-decoder is completed.
+                $go(DecoderState.DecodingSelf)
               } else {
                 $go(DecoderState.DecodingElement(${ element.xmlName }))
               }

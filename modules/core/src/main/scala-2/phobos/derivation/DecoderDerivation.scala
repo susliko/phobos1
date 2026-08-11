@@ -167,10 +167,7 @@ class DecoderDerivation(ctx: blackbox.Context) extends Derivation(ctx) {
                 ${param.xmlName} =>
                   $tempName = $tempName.decodeAsElement(cursor, ${param.xmlName}, ${param.namespaceUri}.orElse(cursor.getScopeDefaultNamespace))
                   if ($tempName.isCompleted) {
-                    $tempName.result(${param.xmlName} :: cursor.history) match {
-                      case $scalaPkg.Right(_) => go($decoderStateObj.DecodingSelf)
-                      case $scalaPkg.Left(error) => new $decodingPkg.ElementDecoder.FailedDecoder[$classType](error)
-                    }
+                    go($decoderStateObj.DecodingSelf)
                   } else {
                     go($decoderStateObj.DecodingElement(${param.xmlName}))
                   }
@@ -180,10 +177,7 @@ class DecoderDerivation(ctx: blackbox.Context) extends Derivation(ctx) {
                 `$xmlNameVal`  =>
                   $tempName = $tempName.decodeAsElement(cursor, $xmlNameVal, ${param.namespaceUri}.orElse(cursor.getScopeDefaultNamespace))
                   if ($tempName.isCompleted) {
-                    $tempName.result($xmlNameVal :: cursor.history) match {
-                      case $scalaPkg.Right(_) => go($decoderStateObj.DecodingSelf)
-                      case $scalaPkg.Left(error) => new $decodingPkg.ElementDecoder.FailedDecoder[$classType](error)
-                    }
+                    go($decoderStateObj.DecodingSelf)
                   } else {
                     go($decoderStateObj.DecodingElement($xmlNameVal))
                   }
@@ -263,10 +257,7 @@ class DecoderDerivation(ctx: blackbox.Context) extends Derivation(ctx) {
           decodeDefault.append((elementName: Tree, elementNamespace: Tree) => q"""
               $tempName = $tempName.decodeAsElement(cursor, $elementName, $elementNamespace.orElse(cursor.getScopeDefaultNamespace))
               if ($tempName.isCompleted) {
-                $tempName.result(cursor.history) match {
-                  case $scalaPkg.Right(_) => go($decoderStateObj.DecodingSelf)
-                  case $scalaPkg.Left(error) => new $decodingPkg.ElementDecoder.FailedDecoder[$classType](error)
-                }
+                go($decoderStateObj.DecodingSelf)
               } else {
                 go($decoderStateObj.IgnoringElement($elementName, $elementNamespace, 0))
               }
